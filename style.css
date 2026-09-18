@@ -5,54 +5,61 @@
 
 * { 
     font-family: "The Punk Grandmother", sans-serif; 
-    box-sizing: border-box; /* Предотвращает вылезание элементов за границы из-за padding/border */
+    box-sizing: border-box; /* Защита от вылезания элементов за экран */
 } 
 
 body { 
     margin: 0; 
+    padding: 0 10px; /* Небольшие отступы по бокам для мобильных */
     background-color: #0a0a0a; 
     color: white; 
     text-align: center; 
     transition: background-color 0.05s ease; 
-    overflow-x: hidden; 
-    padding: 0 20px; /* Боковые отступы, чтобы текст не лип к краям экрана */
+    overflow-x: hidden; /* Запрещаем горизонтальный скролл */
 } 
 
+/* ЗАГОЛОВОК: Используем clamp() для идеального масштаба на любых экранах */
 h1 { 
     margin-top: 50px; 
-    font-size: 8vw; /* Текст масштабируется от ширины экрана */
-    letter-spacing: 4px; 
+    margin-bottom: 20px;
+    /* clamp(минимальный_размер, адаптивный_размер, максимальный_размер) */
+    font-size: clamp(32px, 8vw, 120px); 
+    letter-spacing: clamp(2px, 1vw, 12px); 
     display: block; 
-    line-height: 1.2; /* Заменяем фиксированный height на line-height, чтобы текст не накладывался */
+    line-height: 1.2; 
+    width: 100%;
+    word-wrap: break-word;
 } 
 
-/* Класс для анимации букв заголовка */
+/* БУКВЫ ВОЛНЫ: Главное исправление здесь */
 .wave-char { 
     display: inline-block; 
-    font-size: 8vw; 
+    font-size: inherit; /* Берет размер от родительского h1 */
     animation: textWave 2s ease-in-out infinite alternate; 
+    white-space: pre; /* Сохраняет пробелы и не дает буквам падать поодиночке */
 } 
 
 p { 
     margin-top: 30px; 
-    font-size: 4vw; 
-    letter-spacing: 4px; 
+    font-size: clamp(18px, 4vw, 45px); 
+    letter-spacing: clamp(1px, 0.5vw, 8px); 
     transition: color 0.1s ease; 
+    padding: 0 15px;
 } 
 
 button { 
     background: transparent; 
     color: #ffffff; 
     border: 5px solid #ffffff; 
-    padding: 15px 30px; 
-    font-size: 24px; 
+    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px); 
+    font-size: clamp(16px, 3vw, 32px); 
     cursor: pointer; 
-    margin-top: 80px; /* Уменьшили гигантский отступ */
+    margin-top: clamp(40px, 10vh, 150px); /* Отступ зависит от высоты экрана */
     z-index: 5; 
     position: relative; 
     transition: all 0.2s ease; 
     text-shadow: 2px 2px #000; 
-    max-width: 100%; /* Чтобы кнопка не вылезала за экран */
+    max-width: 90%; /* Кнопка никогда не вылезет за границы экрана */
 } 
 
 button:hover { 
@@ -72,10 +79,10 @@ button:hover {
 } 
 
 .scary-text { 
-    font-size: 15vw; 
+    font-size: clamp(40px, 15vw, 150px); 
     color: #ff0000; 
     font-weight: bold; 
-    text-shadow: 10px 10px #000; 
+    text-shadow: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 10px) #000; 
     display: inline-block; 
     animation: shakeOnly 0.08s infinite linear; 
 } 
@@ -85,25 +92,20 @@ button:hover {
     border-color: #ff0000 !important; 
 } 
 
-/* ========================================== */
-/* СТИЛИ ДЛЯ МОБИЛЬНЫХ ЭКРАНОВ (смартфоны)     */
-/* ========================================== */
-@media (max-width: 768px) {
-    h1, .wave-char { 
-        font-size: 14vw; /* Чуть увеличиваем на мобильных, так как сам экран узкий */
-        letter-spacing: 2px;
-    } 
-    
-    p { 
-        font-size: 6vw; 
-        letter-spacing: 2px;
-    } 
+/* АНИМАЦИИ */
+@keyframes textWave { 
+    0% { transform: translateY(0); } 
+    100% { transform: translateY(-15px); } 
+} 
 
-    button {
-        font-size: 20px;
-        padding: 12px 24px;
-        border-width: 3px;
-        margin-top: 50px;
+@keyframes shakeOnly { 
+    0% { transform: translate(3px, 2px) rotate(0deg); } 
+    25% { transform: translate(-2px, -3px) rotate(-1deg); } 
+    50% { transform: translate(-4px, 0px) rotate(1deg); } 
+    75% { transform: translate(0px, 3px) rotate(0deg); } 
+    100% { transform: translate(-2px, 3px) rotate(-1deg); } 
+}
+
     }
 }
 
