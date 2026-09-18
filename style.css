@@ -10,56 +10,56 @@
 
 body { 
     margin: 0; 
-    padding: 0 10px; /* Небольшие отступы по бокам для мобильных */
+    padding: 0 10px; /* Отступы по бокам, чтобы текст не лип к краям телефона */
     background-color: #0a0a0a; 
     color: white; 
     text-align: center; 
     transition: background-color 0.05s ease; 
-    overflow-x: hidden; /* Запрещаем горизонтальный скролл */
+    overflow-x: hidden; /* Запрещаем горизонтальный скролл (чтобы сайт не шатался влево-вправо) */
 } 
 
-/* ЗАГОЛОВОК: Используем clamp() для идеального масштаба на любых экранах */
+/* РОДИТЕЛЬСКИЙ ЗАГОЛОВОК */
 h1 { 
-    margin-top: 50px; 
+    margin-top: clamp(40px, 10vh, 100px); /* Адаптивный отступ сверху */
     margin-bottom: 20px;
-    /* clamp(минимальный_размер, адаптивный_размер, максимальный_размер) */
-    font-size: clamp(32px, 8vw, 120px); 
-    letter-spacing: clamp(2px, 1vw, 12px); 
+    font-size: clamp(24px, 5.5vw, 120px); /* Авто-подбор размера: минимум 24px, максимум 120px */
+    letter-spacing: clamp(1px, 0.5vw, 12px); /* Уменьшаем отступы между буквами на смартфонах */
     display: block; 
     line-height: 1.2; 
     width: 100%;
     word-wrap: break-word;
 } 
 
-/* БУКВЫ ВОЛНЫ: Главное исправление здесь */
+/* БУКВЫ, КОТОРЫЕ СОЗДАЕТ JAVASCRIPT */
 .wave-char { 
     display: inline-block; 
-    font-size: inherit; /* Берет размер от родительского h1 */
+    font-size: inherit; /* Жестко наследует адаптивный размер от h1 */
+    letter-spacing: inherit; /* Наследует отступы от h1 */
     animation: textWave 2s ease-in-out infinite alternate; 
-    white-space: pre; /* Сохраняет пробелы и не дает буквам падать поодиночке */
 } 
 
+/* ПОДЗАГОЛОВОК */
 p { 
-    margin-top: 30px; 
-    font-size: clamp(18px, 4vw, 45px); 
-    letter-spacing: clamp(1px, 0.5vw, 8px); 
+    margin-top: 20px; 
+    font-size: clamp(16px, 3.5vw, 45px); 
+    letter-spacing: clamp(2px, 0.6vw, 10px); 
     transition: color 0.1s ease; 
-    padding: 0 15px;
 } 
 
+/* КНОПКА PRESAVE */
 button { 
     background: transparent; 
     color: #ffffff; 
-    border: 5px solid #ffffff; 
-    padding: clamp(10px, 2vw, 20px) clamp(20px, 4vw, 40px); 
-    font-size: clamp(16px, 3vw, 32px); 
+    border: 4px solid #ffffff; 
+    padding: clamp(12px, 2vw, 20px) clamp(25px, 4vw, 40px); 
+    font-size: clamp(16px, 2.5vw, 32px); 
     cursor: pointer; 
-    margin-top: clamp(40px, 10vh, 150px); /* Отступ зависит от высоты экрана */
+    margin-top: clamp(50px, 15vh, 180px); /* Отступ зависит от высоты экрана телефона */
     z-index: 5; 
     position: relative; 
     transition: all 0.2s ease; 
     text-shadow: 2px 2px #000; 
-    max-width: 90%; /* Кнопка никогда не вылезет за границы экрана */
+    max-width: 90%; /* Кнопка гарантированно не вылезет за границы экрана */
 } 
 
 button:hover { 
@@ -68,6 +68,7 @@ button:hover {
     border-color: #ffffff; 
 } 
 
+/* КРАСНЫЙ ЭКРАН "NOT NOW" */
 .scary-container { 
     position: fixed; 
     top: 50%; 
@@ -76,49 +77,36 @@ button:hover {
     z-index: 99999; 
     pointer-events: none; 
     width: 100vw; 
+    padding: 0 10px;
 } 
 
 .scary-text { 
-    font-size: clamp(40px, 15vw, 150px); 
+    font-size: clamp(45px, 14vw, 150px); /* Идеально сжимается на мобилке */
     color: #ff0000; 
     font-weight: bold; 
     text-shadow: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 10px) #000; 
     display: inline-block; 
     animation: shakeOnly 0.08s infinite linear; 
+    word-break: break-word;
 } 
 
+/* КЛАСС ХАОСА ДЛЯ СТИЛЕЙ ИЗ JS */
 .glitch-red { 
     color: #ff0000 !important; 
     border-color: #ff0000 !important; 
 } 
 
-/* АНИМАЦИИ */
+/* АНИМАЦИИ (немного уменьшена амплитуда, чтобы текст не улетал за границы) */
 @keyframes textWave { 
     0% { transform: translateY(0); } 
-    100% { transform: translateY(-15px); } 
+    100% { transform: translateY(-12px); } 
 } 
 
 @keyframes shakeOnly { 
-    0% { transform: translate(3px, 2px) rotate(0deg); } 
-    25% { transform: translate(-2px, -3px) rotate(-1deg); } 
-    50% { transform: translate(-4px, 0px) rotate(1deg); } 
-    75% { transform: translate(0px, 3px) rotate(0deg); } 
-    100% { transform: translate(-2px, 3px) rotate(-1deg); } 
+    0% { transform: translate(2px, 1px) rotate(0deg); } 
+    25% { transform: translate(-1px, -2px) rotate(-1deg); } 
+    50% { transform: translate(-3px, 0px) rotate(1deg); } 
+    75% { transform: translate(0px, 2px) rotate(0deg); } 
+    100% { transform: translate(-1px, 2px) rotate(-1deg); } 
 }
 
-    }
-}
-
-/* АНИМАЦИИ */
-@keyframes textWave { 
-    0% { transform: translateY(0); } 
-    100% { transform: translateY(-15px); } /* Уменьшили амплитуду для мобильных */
-} 
-
-@keyframes shakeOnly { 
-    0% { transform: translate(3px, 2px) rotate(0deg); } 
-    25% { transform: translate(-2px, -3px) rotate(-1deg); } 
-    50% { transform: translate(-4px, 0px) rotate(1deg); } 
-    75% { transform: translate(0px, 3px) rotate(0deg); } 
-    100% { transform: translate(-2px, 3px) rotate(-1deg); } 
-}
