@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>NACIONAL'NOST'.COM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1 id="mainTitle">NACIONAL'NOST'.COM</h1>
+  
+  <p class="subText">you are not ready</p>
+
+  <button id="presave">PRESAVE</button>
+
+  <div id="scaryContainer" class="scary-container" style="display: none;">
+    <div class="scary-text">NOT NOW</div>
+  </div>
+
+  <audio id="bassAudio" loop></audio>
+
+  <script>
+    const presaveBtn = document.getElementById('presave');
+    const scaryContainer = document.getElementById('scaryContainer');
+    const bassAudio = document.getElementById('bassAudio');
+    const mainTitle = document.getElementById('mainTitle');
+    const subTexts = document.querySelectorAll('.subText');
+    
+    let flashInterval = null; 
+    const playlist = ['9.mp3', '10.mp3', '11.mp3'];
+
+    if (mainTitle) {
+      const text = mainTitle.innerText;
+      mainTitle.innerText = ''; 
+      
+      for (let i = 0; i < text.length; i++) {
+        const span = document.createElement('span');
+        span.innerText = text[i] === ' ' ? '\u00A0' : text[i]; 
+        span.classList.add('wave-char');
+        span.style.animationDelay = `${i * 0.12}s`; 
+        mainTitle.appendChild(span);
+      }
+    }
+
+    if (presaveBtn) {
+      presaveBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const originalBg = '#0a0a0a'; 
+
+        if (this.innerText === "PRESAVE") {
+          // --- НАЧАЛО ХАОСА ---
+          this.innerText = "UNDERSTOOD";
+          
+          // Включаем контейнер NOT NOW над кнопкой
+          if (scaryContainer) scaryContainer.style.display = 'block';
+
+          if (bassAudio) {
+            const randomTrack = playlist[Math.floor(Math.random() * playlist.length)];
+            bassAudio.src = randomTrack;
+            bassAudio.currentTime = 0; 
+            bassAudio.play().catch(err => console.log(err));
+          }
+
+          // Окрашиваем кнопку, заголовок и мелкий текст в красный цвет
+          this.classList.add('glitch-red');
+          const chars = document.querySelectorAll('.wave-char');
+          chars.forEach(char => char.classList.add('glitch-red'));
+          subTexts.forEach(text => text.classList.add('glitch-red'));
+
+          // Бешеное мигание фона
+          flashInterval = setInterval(() => {
+            if (document.body.style.backgroundColor === 'rgb(255, 0, 0)' || document.body.style.backgroundColor === 'red') {
+              document.body.style.backgroundColor = originalBg;
+            } else {
+              document.body.style.backgroundColor = '#ff0000';
+            }
+          }, 80); 
+
+        } else {
+          // --- ВЫКЛЮЧЕНИЕ ХАОСА ---
+          clearInterval(flashInterval); 
+          document.body.style.backgroundColor = originalBg; 
+          
+          if (scaryContainer) scaryContainer.style.display = 'none';
+          
+          if (bassAudio) {
+            bassAudio.pause(); 
+            bassAudio.src = ""; 
+          }
+
+          // Убираем красный цвет, всё возвращается к исходному белому по кругу!
+          this.classList.remove('glitch-red');
+          const chars = document.querySelectorAll('.wave-char');
+          chars.forEach(char => char.classList.remove('glitch-red'));
+          subTexts.forEach(text => text.classList.remove('glitch-red'));
+
+          this.innerText = "PRESAVE";
+          this.style.color = ""; // ИСПРАВЛЕНО: Сбрасываем ручной цвет, берется белый из CSS
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
